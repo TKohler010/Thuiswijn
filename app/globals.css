@@ -1,0 +1,11 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400;1,500;1,600&family=Newsreader:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  background: #12201a;
+  font-family: "Newsreader", serif;
+}
