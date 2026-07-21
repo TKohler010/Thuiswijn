@@ -3,6 +3,7 @@ import { TEXT } from "@/lib/helpers";
 import WinesBrowser from "@/components/WinesBrowser";
 
 export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 export default async function WinesPage() {
   const [listings, restaurants] = await Promise.all([getListingsWithWines(), getRestaurants()]);

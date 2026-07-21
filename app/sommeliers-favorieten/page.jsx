@@ -5,6 +5,7 @@ import { SURFACE, BORDER, GOLD, TEXT, TEXT_MUTED, WINE_RED } from "@/lib/helpers
 import { ColorDot } from "@/components/UI";
 
 export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 export default async function RankingPage() {
   const [listings, restaurants] = await Promise.all([getListingsWithWines(), getRestaurants()]);

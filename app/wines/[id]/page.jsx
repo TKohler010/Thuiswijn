@@ -6,6 +6,7 @@ import { ColorDot, StarRow } from "@/components/UI";
 import HomePriceBadge from "@/components/HomePriceBadge";
 
 export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 export default async function WineDetailPage({ params }) {
   const { wine, listings } = await getWineWithListings(params.id);

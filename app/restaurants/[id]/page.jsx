@@ -1,17 +1,13 @@
 import Link from "next/link";
 import { ArrowLeft, MapPin } from "lucide-react";
-import { getRestaurant, getListingsForRestaurant, getRestaurants } from "@/lib/data";
+import { getRestaurant, getListingsForRestaurant } from "@/lib/data";
 import { GOLD, TEXT, TEXT_MUTED } from "@/lib/helpers";
 import { StarRow } from "@/components/UI";
 import SourceCard from "@/components/SourceCard";
 import RestaurantWineList from "@/components/RestaurantWineList";
 
 export const revalidate = 3600;
-
-export async function generateStaticParams() {
-  const restaurants = await getRestaurants();
-  return restaurants.map((r) => ({ id: r.id }));
-}
+export const dynamic = "force-dynamic"; // haalt data op bij bezoek, niet tijdens het bouwen
 
 export default async function RestaurantPage({ params }) {
   const [restaurant, listings] = await Promise.all([
