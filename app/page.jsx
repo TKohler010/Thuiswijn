@@ -6,6 +6,7 @@ import { StarRow } from "@/components/UI";
 
 export const revalidate = 3600; // ververs deze pagina elk uur met verse data
 export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store"; // voorkomt dat Vercel's Data Cache Supabase-responses vasthoudt
 
 export default async function HomePage() {
   const [restaurants, listings] = await Promise.all([getRestaurants(), getListingsWithWines()]);

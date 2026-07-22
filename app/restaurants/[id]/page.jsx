@@ -8,6 +8,7 @@ import RestaurantWineList from "@/components/RestaurantWineList";
 
 export const revalidate = 3600;
 export const dynamic = "force-dynamic"; // haalt data op bij bezoek, niet tijdens het bouwen
+export const fetchCache = "force-no-store"; // voorkomt dat Vercel's Data Cache Supabase-responses vasthoudt
 
 export default async function RestaurantPage({ params }) {
   const [restaurant, listings] = await Promise.all([

@@ -4,6 +4,7 @@ import WinesBrowser from "@/components/WinesBrowser";
 
 export const revalidate = 3600;
 export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store"; // voorkomt dat Vercel's Data Cache Supabase-responses vasthoudt
 
 export default async function WinesPage() {
   const [listings, restaurants] = await Promise.all([getListingsWithWines(), getRestaurants()]);
