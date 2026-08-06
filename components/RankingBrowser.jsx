@@ -5,7 +5,15 @@ import { Search, X } from "lucide-react";
 import { SURFACE, BORDER, GOLD, TEXT, TEXT_MUTED, WINE_RED, COLOR_MAP, uniqueSorted, broadRegion, primaryGrape } from "@/lib/helpers";
 import { Select, FilterChip, ColorDot } from "@/components/UI";
 
-const EMPTY_FILTERS = { color: "all", country: "all", region: "all", grape: "all", restaurant: "all" };
+const EMPTY_FILTERS = { color: "all", country: "all", region: "all", grape: "all", restaurant: "all", priceBucket: "all" };
+
+const PRICE_BUCKETS = [
+  { value: "lt75", label: "Tot €75", test: (p) => p < 75 },
+  { value: "75-150", label: "€75 – 150", test: (p) => p >= 75 && p < 150 },
+  { value: "150-300", label: "€150 – 300", test: (p) => p >= 150 && p < 300 },
+  { value: "300-600", label: "€300 – 600", test: (p) => p >= 300 && p < 600 },
+  { value: "gte600", label: "€600 en hoger", test: (p) => p >= 600 },
+];
 
 export default function RankingBrowser({ listings, restaurants }) {
   const [search, setSearch] = useState("");
@@ -44,16 +52,31 @@ export default function RankingBrowser({ listings, restaurants }) {
       byWine[l.wine.id] = byWine[l.wine.id] || { wine: l.wine, listings: [] };
       byWine[l.wine.id].listings.push(l);
     }
-    return Object.values(byWine)
-      .map((x) => ({ ...x, count: new Set(x.listings.map((l) => l.restaurant_id)).size }))
-      .sort((a, b) => b.count - a.count || a.wine.producer.localeCompare(b.wine.producer, "nl"));
+    let grouped = Object.values(byWine).map((x) => ({
+      ...x,
+      count: new Set(x.listings.map((l) => l.restaurant_id)).size,
+      minPrice: Math.min(...x.listings.map((l) => l.price_bottle_eur).filter((p) => p != null)),
+    }));
+
+    if (filters.priceBucket !== "all") {
+      const bucket = PRICE_BUCKETS.find((b) => b.value === filters.priceBucket);
+      grouped = grouped.filter((x) => Number.isFinite(x.minPrice) && bucket.test(x.minPrice));
+    }
+
+    return grouped.sort((a, b) => b.count - a.count || a.wine.producer.localeCompare(b.wine.producer, "nl"));
   }, [listings, search, filters]);
 
   const max = ranked[0]?.count || 1;
   const activeEntries = Object.entries(filters).filter(([, v]) => v !== "all");
-  const filterLabels = { color: "Kleur", country: "Land", region: "Regio", grape: "Druif", restaurant: "Restaurant" };
+  const filterLabels = { color: "Kleur", country: "Land", region: "Regio", grape: "Druif", restaurant: "Restaurant", priceBucket: "Prijs" };
   const chipLabel = (key, value) =>
-    key === "color" ? COLOR_MAP[value].label : key === "restaurant" ? restaurantById[value]?.name : value;
+    key === "color"
+      ? COLOR_MAP[value].label
+      : key === "restaurant"
+      ? restaurantById[value]?.name
+      : key === "priceBucket"
+      ? PRICE_BUCKETS.find((b) => b.value === value)?.label
+      : value;
 
   return (
     <>
@@ -115,6 +138,7 @@ export default function RankingBrowser({ listings, restaurants }) {
           <Select label="Regio" value={filters.region} onChange={(v) => setFilter("region", v)} options={regions} />
           <Select label="Druif" value={filters.grape} onChange={(v) => setFilter("grape", v)} options={grapes} />
           <Select label="Restaurant" value={filters.restaurant} onChange={(v) => setFilter("restaurant", v)} options={restaurants.map((r) => ({ value: r.id, label: r.name }))} />
+          <Select label="Prijs" value={filters.priceBucket} onChange={(v) => setFilter("priceBucket", v)} options={PRICE_BUCKETS} />
         </div>
       )}
 
@@ -124,7 +148,7 @@ export default function RankingBrowser({ listings, restaurants }) {
             Geen wijnen gevonden met deze filters.
           </div>
         )}
-        {ranked.map(({ wine, count, listings: ls }, i) => (
+        {ranked.map(({ wine, count, listings: ls, minPrice }, i) => (
           <Link key={wine.id} href={`/wines/${wine.id}`} className="text-left p-4 rounded-xl relative overflow-hidden block" style={{ background: SURFACE, border: `1px solid ${BORDER}` }}>
             <div className="absolute inset-y-0 left-0 opacity-[0.14]" style={{ width: `${(count / max) * 100}%`, background: WINE_RED }} />
             <div className="relative flex items-center gap-4">
@@ -138,6 +162,11 @@ export default function RankingBrowser({ listings, restaurants }) {
                   {ls.map((l) => restaurantById[l.restaurant_id]?.name).join(" · ")}
                 </div>
               </div>
+              {Number.isFinite(minPrice) && (
+                <div className="text-xs shrink-0 hidden sm:block" style={{ color: TEXT_MUTED, fontFamily: "'IBM Plex Mono', monospace" }}>
+                  vanaf €{minPrice % 1 === 0 ? minPrice : minPrice.toFixed(2)}
+                </div>
+              )}
               <div className="text-lg tabular-nums shrink-0" style={{ fontFamily: "'IBM Plex Mono', monospace", color: count > 1 ? GOLD : TEXT_MUTED }}>{count}×</div>
             </div>
           </Link>
