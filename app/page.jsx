@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { MapPin, TrendingUp } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 import { getRestaurants, getListingsWithWines } from "@/lib/data";
-import { GOLD, SURFACE, BORDER, TEXT, TEXT_MUTED } from "@/lib/helpers";
-import { StarRow } from "@/components/UI";
+import { GOLD, BORDER, TEXT, TEXT_MUTED } from "@/lib/helpers";
+import RestaurantsBrowser from "@/components/RestaurantsBrowser";
 
 export const revalidate = 3600; // ververs deze pagina elk uur met verse data
 export const dynamic = "force-dynamic";
@@ -39,35 +39,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <div className="text-xs tracking-[0.2em] uppercase mb-4" style={{ color: TEXT_MUTED, fontFamily: "'IBM Plex Mono', monospace" }}>
-        Restaurants — {restaurants.length}
-      </div>
-      <div className="grid sm:grid-cols-3 gap-4">
-        {restaurants.map((r) => (
-          <Link
-            key={r.id}
-            href={`/restaurants/${r.id}`}
-            className="text-left p-5 rounded-2xl transition-transform hover:-translate-y-0.5 block"
-            style={{ background: SURFACE, border: `1px solid ${BORDER}` }}
-          >
-            <div className="flex items-center justify-between mb-3">
-              <StarRow n={r.michelin_stars} />
-              <span className="text-[11px]" style={{ color: TEXT_MUTED, fontFamily: "'IBM Plex Mono', monospace" }}>
-                {countByRestaurant[r.id] ?? 0} wijnen
-              </span>
-            </div>
-            <div className="italic text-xl" style={{ fontFamily: "'Fraunces', serif", color: TEXT }}>
-              {r.name}
-            </div>
-            <div className="text-xs mt-1 flex items-center gap-1" style={{ color: GOLD }}>
-              <MapPin size={11} /> {r.city}
-            </div>
-            <p className="text-sm mt-3 leading-snug" style={{ color: TEXT_MUTED }}>
-              {r.tagline}
-            </p>
-          </Link>
-        ))}
-      </div>
+      <RestaurantsBrowser restaurants={restaurants} countByRestaurant={countByRestaurant} />
     </div>
   );
 }
