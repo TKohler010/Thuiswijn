@@ -38,7 +38,7 @@ export default async function WineDetailPage({ params }) {
       </div>
 
       <div className="mt-8 mb-3 text-xs tracking-[0.2em] uppercase" style={{ color: TEXT_MUTED, fontFamily: "'IBM Plex Mono', monospace" }}>
-        Op de kaart bij {listings.length} {listings.length === 1 ? "restaurant" : "restaurants"}
+        Op de kaart bij {new Set(listings.map((l) => l.restaurant.id)).size} {new Set(listings.map((l) => l.restaurant.id)).size === 1 ? "restaurant" : "restaurants"}
       </div>
       <div className="flex flex-col gap-2">
         {listings.map((l) => (

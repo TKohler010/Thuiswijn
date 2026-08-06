@@ -159,7 +159,7 @@ export default function RankingBrowser({ listings, restaurants }) {
                   {wine.producer} {wine.cuvee && <span style={{ color: TEXT_MUTED }}>— {wine.cuvee}</span>}
                 </div>
                 <div className="text-xs" style={{ color: TEXT_MUTED }}>
-                  {ls.map((l) => restaurantById[l.restaurant_id]?.name).join(" · ")}
+                  {[...new Set(ls.map((l) => l.restaurant_id))].map((id) => restaurantById[id]?.name).join(" · ")}
                 </div>
               </div>
               {Number.isFinite(minPrice) && (
