@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { ArrowLeft, ArrowUpRight, Grape, MapPin } from "lucide-react";
+import { ArrowUpRight, Grape, MapPin } from "lucide-react";
 import { getWineWithListings } from "@/lib/data";
 import { BG, BORDER, GOLD, TEXT, TEXT_MUTED, COLOR_MAP, money, wineSearcherUrl } from "@/lib/helpers";
 import { ColorDot, StarRow } from "@/components/UI";
 import HomePriceBadge from "@/components/HomePriceBadge";
+import BackButton from "@/components/BackButton";
 
 export const revalidate = 3600;
 export const dynamic = "force-dynamic";
@@ -14,9 +15,7 @@ export default async function WineDetailPage({ params }) {
 
   return (
     <div className="max-w-2xl mx-auto px-5 pb-24">
-      <Link href="/wines" className="flex items-center gap-1.5 text-sm pt-8 pb-6" style={{ color: TEXT_MUTED }}>
-        <ArrowLeft size={14} /> Alle wijnen
-      </Link>
+      <BackButton />
 
       <div className="flex items-center gap-2 mb-2">
         <ColorDot color={wine.color} />
