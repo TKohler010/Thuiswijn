@@ -1,5 +1,6 @@
 import "./globals.css";
 import Link from "next/link";
+import { Analytics } from "@vercel/analytics/react";
 import { Wine } from "lucide-react";
 import { BG, BORDER, GOLD, TEXT, TEXT_MUTED } from "@/lib/helpers";
 import SiteNav from "@/components/SiteNav";
@@ -28,6 +29,7 @@ export default function RootLayout({ children }) {
         <footer className="max-w-5xl mx-auto px-5 py-10 text-xs" style={{ color: TEXT_MUTED, borderTop: `1px solid ${BORDER}` }}>
           Data handmatig verzameld en periodiek bijgewerkt vanaf de wijnkaarten van elk restaurant.
         </footer>
+        <Analytics />
       </body>
     </html>
   );
