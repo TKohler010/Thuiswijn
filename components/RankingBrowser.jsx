@@ -162,12 +162,15 @@ export default function RankingBrowser({ listings, restaurants }) {
                   {[...new Set(ls.map((l) => l.restaurant_id))].map((id) => restaurantById[id]?.name).join(" · ")}
                 </div>
               </div>
-              {Number.isFinite(minPrice) && (
-                <div className="text-xs shrink-0" style={{ color: TEXT_MUTED, fontFamily: "'IBM Plex Mono', monospace" }}>
-                  vanaf €{minPrice % 1 === 0 ? minPrice : minPrice.toFixed(2)}
-                </div>
-              )}
-              <div className="text-lg tabular-nums shrink-0" style={{ fontFamily: "'IBM Plex Mono', monospace", color: count > 1 ? GOLD : TEXT_MUTED }}>{count}×</div>
+              <div className="text-right shrink-0">
+                <div className="text-lg tabular-nums" style={{ fontFamily: "'IBM Plex Mono', monospace", color: count > 1 ? GOLD : TEXT_MUTED }}>{count}×</div>
+                {Number.isFinite(minPrice) && (
+                  <div className="text-[11px] leading-tight" style={{ color: TEXT_MUTED, fontFamily: "'IBM Plex Mono', monospace" }}>
+                    v.a.
+                    <br />€{Math.round(minPrice)}
+                  </div>
+                )}
+              </div>
             </div>
           </Link>
         ))}
