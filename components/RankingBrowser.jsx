@@ -163,7 +163,7 @@ export default function RankingBrowser({ listings, restaurants }) {
                 </div>
               </div>
               {Number.isFinite(minPrice) && (
-                <div className="text-xs shrink-0 hidden sm:block" style={{ color: TEXT_MUTED, fontFamily: "'IBM Plex Mono', monospace" }}>
+                <div className="text-xs shrink-0" style={{ color: TEXT_MUTED, fontFamily: "'IBM Plex Mono', monospace" }}>
                   vanaf €{minPrice % 1 === 0 ? minPrice : minPrice.toFixed(2)}
                 </div>
               )}
