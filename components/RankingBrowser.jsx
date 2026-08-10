@@ -37,16 +37,16 @@ export default function RankingBrowser({ listings, restaurants }) {
     if (filters.grape !== "all") ls = ls.filter((l) => primaryGrape(l.wine.grape) === filters.grape);
     if (filters.restaurant !== "all") ls = ls.filter((l) => l.restaurant_id === filters.restaurant);
     if (search.trim()) {
-      const s = search.toLowerCase();
-      ls = ls.filter(
-        (l) =>
-          l.wine.producer.toLowerCase().includes(s) ||
-          (l.wine.cuvee || "").toLowerCase().includes(s) ||
-          l.wine.region.toLowerCase().includes(s) ||
-          l.wine.grape.toLowerCase().includes(s)
-      );
-    }
-
+        const s = search.toLowerCase();
+        const has = (v) => (v ?? "").toLowerCase().includes(s);
+        ls = ls.filter(
+          (l) =>
+            has(l.wine.producer) ||
+            has(l.wine.cuvee) ||
+            has(l.wine.region) ||
+            has(l.wine.grape)
+        );
+      }
     const byWine = {};
     for (const l of ls) {
       byWine[l.wine.id] = byWine[l.wine.id] || { wine: l.wine, listings: [] };
